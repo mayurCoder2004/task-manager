@@ -16,8 +16,23 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"];
+
+function validateEnv() {
+  const missing = requiredEnvVars.filter((key) => !process.env[key]);
+
+  if (missing.length > 0) {
+    console.error(
+      `Missing required environment variables: ${missing.join(", ")}. Set them in your deployment environment.`
+    );
+    process.exit(1);
+  }
+}
+
 async function startServer() {
   try {
+    validateEnv();
+
     await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 10000,
     });
