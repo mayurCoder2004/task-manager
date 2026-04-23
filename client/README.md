@@ -1,16 +1,51 @@
-# React + Vite
+# Task Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React + Vite frontend for the Task Manager application.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React
+- Vite
+- React Router
+- Axios
+- Tailwind CSS
 
-## React Compiler
+## Commands
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From this folder:
 
-## Expanding the ESLint configuration
+	npm install
+	npm run dev
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Build and lint:
+
+	npm run build
+	npm run lint
+
+## API Base URL
+
+Set this variable in client/.env:
+
+	VITE_API_URL=http://localhost:5000/api
+
+The frontend uses this value as the backend API base URL.
+
+Default used in code if missing:
+
+	http://localhost:5000/api
+
+Make sure the backend server is running before using login, signup, and dashboard features.
+
+## Styling
+
+Tailwind CSS is configured with:
+
+- tailwind.config.js
+- postcss.config.js
+- src/index.css
+
+## App Routes
+
+- /login
+- /signup
+- /dashboard (protected)
