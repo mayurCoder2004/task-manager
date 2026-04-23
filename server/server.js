@@ -16,8 +16,18 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("DB Connected"))
-  .catch(err => console.log(err));
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000,
+    });
+    console.log("DB Connected");
 
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+    app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
