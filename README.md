@@ -1,129 +1,141 @@
-# Task Manager (MERN + Tailwind)
+# Task Manager
 
-A full-stack task manager with authentication, protected dashboard access, and a modern Tailwind CSS UI.
+A full-stack task manager built with React + Vite on the frontend and Node.js + Express + MongoDB on the backend.
+
+## Highlights
+
+- User signup and login with JWT auth
+- Protected task routes
+- Create, read, update, and delete tasks
+- Tailwind CSS UI
+- Docker Compose support for MongoDB
 
 ## Tech Stack
 
 - Frontend: React, Vite, React Router, Axios, Tailwind CSS
-- Backend: Node.js, Express, Mongoose, JWT, bcrypt
+- Backend: Node.js, Express, Mongoose, JWT, bcryptjs
 - Database: MongoDB
 
 ## Project Structure
 
-- client: React app (UI, routing, API calls)
-- server: Express API (auth + task CRUD)
-- docker-compose.yml: MongoDB container setup
+```text
+task-manager/
+  client/              # React frontend
+  server/              # Express API + MongoDB models/routes
+  docker-compose.yml   # MongoDB container (optional for local dev)
+```
 
-## Features
+## Quick Start
 
-- User signup and login
-- JWT-based authentication
-- Protected dashboard route
-- Create, list, update, and delete tasks
-- Task completion toggle
-- Responsive, styled UI using Tailwind CSS
+### 1) Install dependencies
 
-## Prerequisites
+```bash
+cd server
+npm install
 
-- Node.js 18+
-- npm
-- MongoDB (local or Docker)
+cd ../client
+npm install
+```
 
-## Environment Variables
+### 2) Configure environment variables
 
-Create a file named .env inside the server folder with:
+Create `server/.env`:
 
+```env
 MONGO_URI=mongodb://localhost:27017/task-manager
 JWT_SECRET=your_super_secret_key
+PORT=5000
+```
 
-Create a file named .env inside the client folder with:
+Create `client/.env`:
 
+```env
 VITE_API_URL=http://localhost:5000/api
+```
 
-Notes:
-- The server runs on port 5000.
-- The client is configured to call http://localhost:5000/api.
+### 3) Start MongoDB
 
-## Run with Docker (MongoDB only)
+Choose one option:
 
-From the project root:
+1. Local MongoDB installation, or
+2. Docker Compose from project root:
 
-  docker compose up -d
+```bash
+docker compose up -d
+```
 
-This starts MongoDB on port 27017.
+Note: The included `docker-compose.yml` uses MongoDB root credentials. Update it before using in shared environments.
 
-## Install Dependencies
+### 4) Run the app
 
-Install server dependencies:
+Terminal 1 (backend):
 
-  cd server
-  npm install
+```bash
+cd server
+npm run dev
+```
 
-Install client dependencies:
+Terminal 2 (frontend):
 
-  cd ../client
-  npm install
+```bash
+cd client
+npm run dev
+```
 
-## Start the App (Development)
+Frontend runs on Vite default URL (typically `http://localhost:5173`).
 
-Start backend (Terminal 1):
+## Scripts
 
-  cd server
-  npm run dev
+### Server (`/server`)
 
-Start frontend (Terminal 2):
+- `npm run dev` - start API server (`server.js`)
+- `npm test` - placeholder test script
 
-  cd client
-  npm run dev
+### Client (`/client`)
 
-Open the app in your browser at the Vite URL shown in terminal (usually http://localhost:5173).
+- `npm run dev` - start Vite dev server
+- `npm run build` - create production build
+- `npm run preview` - preview production build
+- `npm run lint` - run ESLint
 
-## Available Scripts
+## API Overview
 
-Client (inside client folder):
+Base URL: `http://localhost:5000/api`
 
-- npm run dev: start Vite dev server
-- npm run build: production build
-- npm run lint: lint frontend code
-- npm run preview: preview production build
+### Auth Routes
 
-Server (inside server folder):
+- `POST /auth/signup`
+- `POST /auth/login`
 
-- npm run dev: start API server
+### Task Routes (Protected)
 
-## API Endpoints
+- `POST /tasks`
+- `GET /tasks`
+- `PUT /tasks/:id`
+- `DELETE /tasks/:id`
 
-Base URL: http://localhost:5000/api
+Auth header format:
 
-Auth:
-- POST /auth/signup
-- POST /auth/login
+```http
+Authorization: <jwt_token>
+```
 
-Tasks (Authorization header required):
-- POST /tasks
-- GET /tasks
-- PUT /tasks/:id
-- DELETE /tasks/:id
+## Deployment Notes
 
-Example Authorization header:
+- The frontend includes `client/vercel.json` rewrite support for SPA routing.
+- The backend requires `MONGO_URI` and `JWT_SECRET` at runtime.
+- `server.js` validates required env vars on startup and exits if missing.
 
-  Authorization: <jwt_token>
+## Known Limitations
 
-## Tailwind CSS Notes
+- Signup currently returns the created user document.
+- `PUT /tasks/:id` and `DELETE /tasks/:id` do not enforce task ownership checks.
+- Auth and task routes do not yet include comprehensive validation/error handling.
 
-Tailwind is configured in:
-- client/tailwind.config.js
-- client/postcss.config.js
-- client/src/index.css
+## Suggested Next Improvements
 
-## Current Limitations
-
-- Signup currently returns the created user object from backend.
-- Task update and delete endpoints do not validate task ownership by authenticated user.
-
-## Next Improvements
-
-- Add backend validation and centralized error handling
-- Enforce task ownership checks on update/delete
-- Add toast notifications and loading skeletons
-- Add tests for auth and task routes
+- Add request validation (`zod`, `joi`, or `express-validator`)
+- Enforce task ownership in update/delete operations
+- Add centralized error middleware
+- Add backend tests for auth and task routes
+- Add frontend loading/error states and notifications
